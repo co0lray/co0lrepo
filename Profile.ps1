@@ -1,9 +1,6 @@
 ﻿# Multiple ps1 profiles scripts gathered from (https://stackoverflow.com/questions/138144/what-s-in-your-powershell-profile-ps1-file )
 # and other random sources 
 
-$existingVariables = Get-Variable
-
-try {
 
 #region execution ps1 profile script by Dan Tsekhanskiy
 <#
@@ -710,10 +707,23 @@ function apropos {
 }
 #endregion
 
-Set-PSReadLineOption –HistoryNoDuplicates -ShowToolTips
+
 
 } 
-<# finally {
+<#
+# to removes duplicates from your history :
+Set-PSReadLineOption –HistoryNoDuplicates -ShowToolTips
+
+# to remove any left over variables manually , I found couple of soultions in one post in stackoverlow at this link 
+# https://stackoverflow.com/questions/17678381/powershell-remove-all-variables/40266400#40266400
+# Solution 1 use : 
+Get-Variable -Exclude PWD,*Preference,psEditor | Remove-Variable -EA 0
+
+# Solution 2 use : 
+$existingVariables = Get-Variable
+try {
+    # your script here
+} finally {
     Get-Variable |
         Where-Object Name -notin $existingVariables.Name |
         Remove-Variable
